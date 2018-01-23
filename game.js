@@ -53,7 +53,11 @@ window.onload = function(_) {
         // console.log(ev.key);
         if (ev.key == 'ArrowLeft') leftPressed = true;
         if (ev.key == 'ArrowRight') rightPressed = true;
-        if (ev.key == ' ' && (player_stable  || player.y == canvas.height - player.height)) jump_frames = 25;
+        if (
+            ev.key == ' ' &&
+            (player_stable  || player.y == canvas.height - player.height)
+        )
+            jump_frames = 25;
     });
 
     document.addEventListener("keyup", function(ev){
@@ -65,10 +69,10 @@ window.onload = function(_) {
     function make_obstacle(y) {
         return new Obstacle(Math.floor(Math.random() * (canvas.width - 100)), y);
     }
-    
+
     function is_player_stable(player, obstacles){
         var player_stable = false;
-        
+
         for (platform of obstacles) {
             if (player.standing(platform)) {
                 player_stable = true;
@@ -81,9 +85,10 @@ window.onload = function(_) {
         for (platform of obstacles) {
             platform.y += SCROLL_SPEED;
         }
+
         player_stable = is_player_stable(player, obstacles);
 
-        if(player.y < 0){
+        if(player.y <= 0){
             SCROLL_SPEED = 3;
         }else{
             SCROLL_SPEED = DEFAULT_SCROLL_SPEED;
@@ -102,12 +107,9 @@ window.onload = function(_) {
             player.change_y(SCROLL_SPEED);
         else if (!player_stable)
             player.change_y(GRAVITY + SCROLL_SPEED);
-        
-        window.setTimeout(update, 10);
     }
 
     function draw() {
-
         // render
         ctx.fillStyle = "#FFFFFF";
         ctx.globalAlpha = 0.1;
@@ -140,7 +142,7 @@ window.onload = function(_) {
         obstacles.push(make_obstacle(i));
     }
 
-    update();
+    window.setInterval(update, 10);
     generate_enemy();
     draw();
 }
