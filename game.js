@@ -48,7 +48,7 @@ window.onload = function(_) {
                 clear_canvas(1);
                 ctx.fillStyle = "#000000";
                 ctx.globalAlpha = 1;
-                ctx.font = '48px serif';
+                ctx.font = '48px sans-serif';
                 ctx.fillText('Final score: ' + this.score, 10, 250);
             } else {
                 this.y += step;
@@ -68,8 +68,8 @@ window.onload = function(_) {
 
     document.addEventListener("keydown", function(ev){
         // console.log(ev.key);
-        if (ev.key == 'ArrowLeft') leftPressed = true;
-        if (ev.key == 'ArrowRight') rightPressed = true;
+        if (ev.key == 'ArrowLeft' || ev.key == 'Left') leftPressed = true;
+        if (ev.key == 'ArrowRight' || ev.key == 'Right') rightPressed = true;
         if (
             ev.key == ' ' &&
             (player_stable  || player.y == canvas.height - player.height)
@@ -78,8 +78,8 @@ window.onload = function(_) {
     });
 
     document.addEventListener("keyup", function(ev){
-        if(ev.key == 'ArrowLeft') leftPressed = false;
-        if(ev.key == 'ArrowRight')rightPressed = false;
+        if(ev.key == 'ArrowLeft' || ev.key == 'Left') leftPressed = false;
+        if(ev.key == 'ArrowRight' || ev.key == 'Right')rightPressed = false;
         // else if (ev.key == ' ') spacePressed = false;
     });
 
@@ -160,7 +160,8 @@ window.onload = function(_) {
 
         ctx.fillText(
             'Score: ' + player.score,
-            canvas.width - 100, 24
+            canvas.width - 110, 
+            24
         );
 
         renderer = window.requestAnimationFrame(draw);
@@ -168,9 +169,9 @@ window.onload = function(_) {
 
     if (canvas.getContext) {
         ctx = canvas.getContext('2d');
-        ctx.font = '12px serif';
+        ctx.font = '18px sans-serif';
     } else {
-        alert("this browser is bad");
+        alert("this browser has no canvas support");
         return;
     }
 
