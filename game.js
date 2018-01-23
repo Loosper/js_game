@@ -20,7 +20,7 @@ window.onload = function(_) {
         y: canvas.height - 50,
 
         standing: function(platform) {
-            return ((platform.y == this.y + this.height - 1 || platform.y == this.y + this.height - 2) &&  
+            return ((platform.y <= this.y + this.height - 1 && platform.y >= this.y + this.height - 3) &&  
                 platform.x <= this.x + this.width &&
                 platform.x + platform.width >= this.x
             );
