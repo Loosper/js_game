@@ -50,7 +50,7 @@ window.onload = function(_) {
     var player_stable = true;
 
     document.addEventListener("keydown", function(ev){
-        console.log(ev.key);
+        // console.log(ev.key);
         if (ev.key == 'ArrowLeft') leftPressed = true;
         if (ev.key == 'ArrowRight') rightPressed = true;
         if (ev.key == ' ' && (player_stable  || player.y == canvas.height - player.height)) jump_frames = 25;
@@ -63,7 +63,7 @@ window.onload = function(_) {
     });
 
     function make_obstacle(y) {
-        return new Obstacle(Math.floor(Math.random() * canvas.width), y);
+        return new Obstacle(Math.floor(Math.random() * (canvas.width - 100)), y);
     }
     
     function is_player_stable(player, obstacles){
