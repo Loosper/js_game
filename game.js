@@ -14,7 +14,32 @@ window.onload = function(_) {
         width: 50,
         height: 50,
         x: canvas.width / 2,
-        y: canvas.height - 50
+        y: canvas.height - 50,
+
+        standing: function(platform) {
+            return (platform.y == this.y + this.height - 1 &&
+                platform.x <= this.x + this.width &&
+                platform.x + platform.width >= this.x
+            );
+        },
+
+        change_x: function(step) {
+            if (this.x + step < 0)
+                this.x = 0;
+            else if (this.x + this.width + step > canvas.width)
+                this.x = canvas.width - this.width;
+            else
+                this.x += step;
+        },
+
+        change_y: function(step) {
+            if (this.y + step < 0)
+                this.y = 0;
+            else if (this.y + this.height + step > canvas.height)
+                this.y = canvas.height - this.height;
+            else
+                this.y += step;
+        }
     }
 
     var gravity = 1;
@@ -50,13 +75,19 @@ window.onload = function(_) {
     });
 
     function draw() {
-        if (leftPressed) player.x -= 5;
-        if (rightPressed) player.x += 5;
-        if (jump_frames-- > 0) player.y -= 4;
+        var player_stable = false;
+        if (leftPressed) player.change_x(-5);
+        if (rightPressed) player.change_x(5);
+        if (jump_frames-- > 0) player.change_y(-4);
 
-        // for (platform of obstacles) {
-        //
-        // }
+        for (platform of obstacles) {
+            if (player.standing(platform)) {
+                player_stable = true;
+            }
+        }
+
+        if (!player_stable)
+            player.change_y(gravity);
 
         ctx.fillStyle = "#FFFFFF";
         ctx.globalAlpha = 0.1;
