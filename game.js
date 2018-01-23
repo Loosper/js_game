@@ -50,7 +50,7 @@ window.onload = function(_) {
     var jump_frames = 0;
 
     document.addEventListener("keydown", function(ev){
-        console.log(ev.key);
+        // console.log(ev.key);
         if (ev.key == 'ArrowLeft') leftPressed = true;
         else if (ev.key == 'ArrowRight') rightPressed = true;
         else if (ev.key == ' ') jump_frames = 20;
@@ -63,7 +63,7 @@ window.onload = function(_) {
     });
 
     function make_obstacle(y) {
-        return new Obstacle(Math.floor(Math.random() * canvas.width), y);
+        return new Obstacle(Math.floor(Math.random() * (canvas.width - 100)), y);
     }
 
     function draw() {
@@ -112,6 +112,9 @@ window.onload = function(_) {
         alert("this browser is bad");
         return;
     }
+
+    // canvas.height = window.innerHeight * 0.9;
+    // canvas.width = window.innerWidth * 0.9;
 
     for (var i = 0; i < canvas.height; i += 50) {
         obstacles.push(make_obstacle(i));
