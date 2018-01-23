@@ -14,6 +14,7 @@ window.onload = function(_) {
     var canvas = document.getElementById("canvas");
     var ctx;
     var player = {
+        score: 0,
         width: 50,
         height: 50,
         x: canvas.width / 2,
@@ -38,10 +39,20 @@ window.onload = function(_) {
         },
 
         change_y: function(step) {
-            if (this.y + this.height + step > canvas.height)
+            if (this.y + this.height + step > canvas.height) {
                 this.y = canvas.height - this.height;
-            else
+                clearInterval(spawner);
+                clearInterval(updater);
+                window.cancelAnimationFrame(renderer);
+
+                clear_canvas(1);
+                ctx.fillStyle = "#000000";
+                ctx.globalAlpha = 1;
+                ctx.font = '48px serif';
+                ctx.fillText('Final score: ' + this.score, 10, 250);
+            } else {
                 this.y += step;
+            }
         }
     }
 
@@ -50,6 +61,10 @@ window.onload = function(_) {
     var rightPressed = false;
     var jump_frames = 0;
     var player_stable = true;
+    var game_going = false;
+    var updater;
+    var spawner;
+    var renderer;
 
     document.addEventListener("keydown", function(ev){
         // console.log(ev.key);
@@ -84,6 +99,15 @@ window.onload = function(_) {
     }
 
     function update() {
+        if (!game_going) {
+            if (jump_frames) {
+                game_going = true;
+                spawner = window.setInterval(generate_enemy, 1000);
+            } else {
+                return;
+            }
+        }
+
         for (platform of obstacles) {
             platform.y += SCROLL_SPEED;
         }
@@ -109,13 +133,19 @@ window.onload = function(_) {
             player.change_y(SCROLL_SPEED);
         else if (!player_stable)
             player.change_y(GRAVITY + SCROLL_SPEED);
+
+        player.score++;
+    }
+
+    function clear_canvas(alpha) {
+        ctx.fillStyle = "#FFFFFF";
+        ctx.globalAlpha = alpha;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
     function draw() {
-        // render
-        ctx.fillStyle = "#FFFFFF";
-        ctx.globalAlpha = 0.1;
-        ctx.fillRect(0, 0, canvas.width, canvas.height, 0.5);
+        clear_canvas(0.1);
+
         ctx.globalAlpha = 1;
         ctx.fillStyle = "#0000FF";
 
@@ -125,26 +155,33 @@ window.onload = function(_) {
         ctx.fillStyle = "#FF0000";
         ctx.fillRect(player.x, player.y, player.width, player.height);
 
-        window.requestAnimationFrame(draw);
+        ctx.fillStyle = "#09F000";
+
+        ctx.fillText(
+            'Score: ' + player.score,
+            canvas.width - 100, 24
+        );
+
+        renderer = window.requestAnimationFrame(draw);
     }
 
     if (canvas.getContext) {
         ctx = canvas.getContext('2d');
+        ctx.font = '12px serif';
     } else {
         alert("this browser is bad");
         return;
     }
 
     function generate_enemy(){
-       obstacles.unshift(make_obstacle(0));
-        window.setTimeout(generate_enemy, 1000);
+        obstacles.unshift(make_obstacle(0));
     }
 
     for (var i = 0; i < canvas.height; i += 100) {
         obstacles.push(make_obstacle(i));
     }
 
-    window.setInterval(update, 10);
+    updater = window.setInterval(update, 10);
     generate_enemy();
     draw();
 }
