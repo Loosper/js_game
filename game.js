@@ -20,7 +20,7 @@ window.onload = function(_) {
         y: canvas.height - 50,
 
         standing: function(platform) {
-            return (platform.y == this.y + this.height - 1 &&
+            return ((platform.y == this.y + this.height - 1 || platform.y == this.y + this.height - 2) &&  
                 platform.x <= this.x + this.width &&
                 platform.x + platform.width >= this.x
             );
@@ -98,8 +98,10 @@ window.onload = function(_) {
         if (rightPressed) player.change_x(5);
         if (jump_frames-- > 0) player.change_y(-jump_frames);
 
-        if (!player_stable)
-            player.change_y(GRAVITY + SCROLL_SPEED - DEFAULT_SCROLL_SPEED);
+        if(player_stable)
+            player.change_y(SCROLL_SPEED);
+        else if (!player_stable)
+            player.change_y(GRAVITY + SCROLL_SPEED);
         
         window.setTimeout(update, 10);
     }
