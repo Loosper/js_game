@@ -8,6 +8,8 @@ window.onload = function(_) {
         }
     }
 
+    var SCROLL_SPEED = 1;
+    var GRAVITY = 2;
     var canvas = document.getElementById("canvas");
     var ctx;
     var player = {
@@ -42,24 +44,10 @@ window.onload = function(_) {
         }
     }
 
-    var gravity = 1;
     var obstacles = [];
     var leftPressed = false;
     var rightPressed = false;
     var jump_frames = 0;
-
-    if (canvas.getContext) {
-        ctx = canvas.getContext('2d');
-    } else {
-        alert("this browser is bad");
-        return;
-    }
-
-    for (var i = 0; i < canvas.height; i += 50) {
-        obstacles.push(
-            new Obstacle(Math.floor(Math.random() * canvas.width), i)
-        );
-    }
 
     document.addEventListener("keydown", function(ev){
         console.log(ev.key);
@@ -74,21 +62,35 @@ window.onload = function(_) {
         // else if (ev.key == ' ') spacePressed = false;
     });
 
+    function make_obstacle(y) {
+        return new Obstacle(Math.floor(Math.random() * canvas.width), y);
+    }
+
     function draw() {
         var player_stable = false;
-        if (leftPressed) player.change_x(-5);
-        if (rightPressed) player.change_x(5);
-        if (jump_frames-- > 0) player.change_y(-4);
 
         for (platform of obstacles) {
+            platform.y += SCROLL_SPEED;
+
             if (player.standing(platform)) {
                 player_stable = true;
             }
         }
 
-        if (!player_stable)
-            player.change_y(gravity);
+        var top = obstacles[obstacles.length - 1];
+        if (top.y + top.height > canvas.height) {
+            obstacles.pop();
+            obstacles.unshift(make_obstacle(0));
+        }
 
+        if (leftPressed) player.change_x(-5);
+        if (rightPressed) player.change_x(5);
+        if (jump_frames-- > 0) player.change_y(-4);
+
+        if (!player_stable)
+            player.change_y(GRAVITY);
+
+        // render
         ctx.fillStyle = "#FFFFFF";
         ctx.globalAlpha = 0.1;
         ctx.fillRect(0, 0, canvas.width, canvas.height, 0.5);
@@ -102,6 +104,17 @@ window.onload = function(_) {
         }
 
         window.requestAnimationFrame(draw);
+    }
+
+    if (canvas.getContext) {
+        ctx = canvas.getContext('2d');
+    } else {
+        alert("this browser is bad");
+        return;
+    }
+
+    for (var i = 0; i < canvas.height; i += 50) {
+        obstacles.push(make_obstacle(i));
     }
 
     draw();
