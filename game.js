@@ -21,7 +21,9 @@ window.onload = function(_) {
         y: canvas.height - 50,
 
         standing: function(platform) {
-            return ((platform.y <= this.y + this.height - 1 && platform.y >= this.y + this.height - 3) &&  
+            return (
+                (platform.y <= this.y + this.height - 1 &&
+                platform.y >= this.y + this.height - 3) &&
                 platform.x <= this.x + this.width &&
                 platform.x + platform.width >= this.x
             );
@@ -97,6 +99,9 @@ window.onload = function(_) {
     }
 
     function update() {
+        if (leftPressed) player.change_x(-5);
+        if (rightPressed) player.change_x(5);
+
         if (!game_going) {
             if (jump_frames) {
                 game_going = true;
@@ -123,8 +128,6 @@ window.onload = function(_) {
             obstacles.pop();
         }
 
-        if (leftPressed) player.change_x(-5);
-        if (rightPressed) player.change_x(5);
         if (jump_frames-- > 0) player.change_y(-jump_frames);
 
         if(player_stable)
