@@ -11,7 +11,7 @@ window.onload = function(_) {
     var DEFAULT_SCROLL_SPEED = 1;
     var SCROLL_SPEED = DEFAULT_SCROLL_SPEED;
     var GRAVITY = 2;
-    var canvas = document.getElementById("canvas");
+    var canvas = document.getElementsByTagName("canvas")[0];
     var ctx;
     var player = {
         score: 0,
@@ -160,7 +160,7 @@ window.onload = function(_) {
 
         ctx.fillText(
             'Score: ' + player.score,
-            canvas.width - 110, 
+            canvas.width - 110,
             24
         );
 
